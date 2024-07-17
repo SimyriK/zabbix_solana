@@ -159,6 +159,8 @@ while true; do
                 logentry="$logentry behind=$behind rootSlot=$rootSlot lastVote=$lastVote"
                 leaderSlots=$(jq -r '.leaderSlots' <<<$validatorBlockProduction)
                 skippedSlots=$(jq -r '.skippedSlots' <<<$validatorBlockProduction)
+                if [[ $leaderSlots == "" ]]; then leaderSlots=0; fi
+                if [[ $skippedSlots == "" ]]; then skippedSlots=0; fi
                 producedSlots=$(echo $leaderSlots - $skippedSlots | bc)
                 # scheduleSlots=$($cli leader-schedule --output json-compact | jq '[.leaderScheduleEntries[] | select (.leader == '\"$IDENTITYPUBKEY\"').slot]')
                 firstSlotInEpoch=$(curl -s http://127.0.0.1:8899 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getEpochInfo"}' | jq -r '(.result.absoluteSlot | tostring) + " - " + (.result.slotIndex | tostring)' | bc)
@@ -166,7 +168,7 @@ while true; do
                 scheduledSlotsQty=$(jq -r 'length' <<<$scheduleSlots)
                 progressSlots=$(echo "scale=2 ; $leaderSlots / $scheduledSlotsQty * 100" | bc)
                 nearestSlot=$(jq -r "[.[] | select (.> $blockHeight)] | .[1]" <<<$scheduleSlots)
-                nextSlot=$(echo "scale=2 ; ($nearestSlot - $blockHeight) * 0.4 / 60" | bc) # 0.4 sec to slot
+                nextSlot=$(echo "scale=2 ; ($nearestSlot - $blockHeight) * 0.459 / 60" | bc) # 0.459 sec to slot
                 #totalBlocksProduced=$(jq -r '.total_blocks_produced' <<<$blockProduction)
                 totalBlocksProduced=$(jq -r '.total_slots' <<<$blockProduction)
                 totalSlotsSkipped=$(jq -r '.total_slots_skipped' <<<$blockProduction)
