@@ -48,7 +48,7 @@ else
 fi
 
 if [ -z "$RPCURL" ]; then
-    rpcPort=$(ps aux | grep solana-validator | grep -Po "\-\-rpc\-port\s+\K[0-9]+")
+    rpcPort=$(ps aux | grep agave-validator | grep -Po "\-\-rpc\-port\s+\K[0-9]+")
     if [ -z "$rpcPort" ]; then
         echo "auto-detection failed, please configure the RPCURL"
         exit 1
@@ -56,7 +56,7 @@ if [ -z "$RPCURL" ]; then
     RPCURL="http://127.0.0.1:$rpcPort"
 fi
 
-noVoting=$(ps aux | grep solana-validator | grep -c "\-\-no\-voting")
+noVoting=$(ps aux | grep agave-validator | grep -c "\-\-no\-voting")
 if [ "$noVoting" -eq 0 ]; then
     if [ -z "$IDENTITYPUBKEY" ]; then IDENTITYPUBKEY=$($cli address --ws $RPCURL); fi
     if [ -z "$IDENTITYPUBKEY" ]; then
