@@ -159,8 +159,6 @@ while true; do
                 logentry="$logentry behind=$behind rootSlot=$rootSlot lastVote=$lastVote"
                 leaderSlots=$(jq -r '.leaderSlots' <<<$validatorBlockProduction)
                 skippedSlots=$(jq -r '.skippedSlots' <<<$validatorBlockProduction)
-                if [[ $leaderSlots == "" ]]; then leaderSlots=0; fi
-                if [[ $skippedSlots == "" ]]; then skippedSlots=0; fi
                 producedSlots=$(echo $leaderSlots - $skippedSlots | bc)
                 # scheduleSlots=$($cli leader-schedule --output json-compact | jq '[.leaderScheduleEntries[] | select (.leader == '\"$IDENTITYPUBKEY\"').slot]')
                 firstSlotInEpoch=$(curl -s http://127.0.0.1:8899 -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","id":1, "method":"getEpochInfo"}' | jq -r '(.result.absoluteSlot | tostring) + " - " + (.result.slotIndex | tostring)' | bc)
@@ -177,7 +175,9 @@ while true; do
                     balance=$(echo "scale=2 ; $balance / 1000000000.0" | bc)
                     voteBalance=$(echo "scale=2 ; $voteBalance / 1000000000.0" | bc)
                 fi
-                if [ -n "$leaderSlots" ]; then pctSkipped=$(echo "scale=2 ; 100 * $skippedSlots / $leaderSlots" | bc); fi
+                pctSkipped=$(jq -r '.skipRate' <<<$validatorInfo)
+                pctSkipped=$(echo "scale=2 ; $pctSkipped / 1" | bc)
+                if [ -n "$pctSkipped" ]; then pctSkipped=0; fi
                 if [ -n "$totalBlocksProduced" ]; then
                     pctTotSkipped=$(echo "scale=2 ; 100 * $totalSlotsSkipped / $totalBlocksProduced" | bc)
                     pctSkippedDelta=$(echo "scale=2 ; 100 * ($pctSkipped - $pctTotSkipped) / $pctTotSkipped" | bc)
