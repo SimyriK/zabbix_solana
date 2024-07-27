@@ -177,7 +177,7 @@ while true; do
                 fi
                 pctSkipped=$(jq -r '.skipRate' <<<$validatorInfo)
                 pctSkipped=$(echo "scale=2 ; $pctSkipped / 1" | bc)
-                if [ -n "$pctSkipped" ]; then pctSkipped=0; fi
+                if [ -z "$pctSkipped" ]; then pctSkipped=0; fi
                 if [ -n "$totalBlocksProduced" ]; then
                     pctTotSkipped=$(echo "scale=2 ; 100 * $totalSlotsSkipped / $totalBlocksProduced" | bc)
                     pctSkippedDelta=$(echo "scale=2 ; 100 * ($pctSkipped - $pctTotSkipped) / $pctTotSkipped" | bc)
