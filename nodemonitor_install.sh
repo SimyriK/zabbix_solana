@@ -1,4 +1,8 @@
 !/bin/bash
+wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_7.0-2+ubuntu24.04_all.deb
+dpkg -i zabbix-release_7.0-2+ubuntu24.04_all.deb
+apt update
+rm zabbix-release_7.0-2+ubuntu24.04_all.deb
 apt install -y jq bc zabbix-agent
 name=$(cat /etc/zabbix/zabbix_agentd.conf | grep ^Hostname= | sed -r 's/Hostname=(.+)/\1/g')
 server=$(cat /etc/zabbix/zabbix_agentd.conf | grep ^Server= | sed -r 's/Server=(.+)/\1/g')
@@ -113,6 +117,10 @@ touch $LOGPATH/$LOGNAME
 zabbixSericeFile=$(systemctl status zabbix-agent.service | grep Loaded | sed -r 's/.+\((\/[^; ]+); .+/\1/g')
 zabbixUser=$(cat $zabbixSericeFile | grep User | sed -r 's/User=(.*)/\1/g')
 zabbixUserGroup=$(cat $zabbixSericeFile | grep Group | sed -r 's/Group=(.*)/\1/g')
+mkdir /etc/zabbix/zabbix_agentd.conf.d
+mkdir /var/log/zabbix-agent/
+chown zabbix:zabbix /etc/zabbix/zabbix_agentd.conf.d
+chown zabbix:zabbix /var/log/zabbix-agent/
 chown $zabbixUser:$zabbixUserGroup $LOGPATH
 chown $zabbixUser:$zabbixUserGroup $LOGPATH/$LOGNAME
 chmod 777 $LOGPATH
