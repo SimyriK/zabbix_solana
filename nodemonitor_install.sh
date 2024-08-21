@@ -119,8 +119,8 @@ zabbixUser=$(cat $zabbixSericeFile | grep User | sed -r 's/User=(.*)/\1/g')
 zabbixUserGroup=$(cat $zabbixSericeFile | grep Group | sed -r 's/Group=(.*)/\1/g')
 mkdir /etc/zabbix/zabbix_agentd.conf.d
 mkdir /var/log/zabbix-agent/
-chown zabbix:zabbix /etc/zabbix/zabbix_agentd.conf.d
-chown zabbix:zabbix /var/log/zabbix-agent/
+chown $zabbixUser:$zabbixUserGroup /etc/zabbix/zabbix_agentd.conf.d
+chown $zabbixUser:$zabbixUserGroup /var/log/zabbix-agent/
 chown $zabbixUser:$zabbixUserGroup $LOGPATH
 chown $zabbixUser:$zabbixUserGroup $LOGPATH/$LOGNAME
 chmod 777 $LOGPATH
