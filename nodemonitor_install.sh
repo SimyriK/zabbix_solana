@@ -8,7 +8,7 @@ echo $server
 if [ "$server" != "" ] && [ "$name" != "" ]; then
     echo "Zabbix configuration contains: Server = $server and Hosname = $name. Replace this configuration? (y/n)"
     read answer
-    if [ "$answer" != "${answer#[Yy]}" ]; then
+    if [[ $answer == [Yy]* ]]; then
         echo "Enter IP or hostname of Zabbix server:"
         read server1
         if [ "$server" != "" ]; then
@@ -68,7 +68,7 @@ echo "LOGNAME = $LOGNAME"
 
 echo "Do you want to customize config? (y/n):"
 read answer
-if [ "$answer" != "${answer#[Yy]}" ]; then
+if [[ $answer == [Yy]* ]]; then
     
     echo "Enter directory for solana the config files (default is $CONFIGDIR). For default press Enter:"
     read dir
