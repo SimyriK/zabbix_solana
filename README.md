@@ -2,6 +2,7 @@
 
 #new patameters: scheduledSlotsQty, producedSlots, nextSlot, epochCredits, voteBalance, clusterTPS, healthStatus, healthErrorMessage, progressSlots
 
+
 A complete log file based Solana validator uptime monitoring solution for Zabbix. It consists of the shell script nodemonitor.sh for generating log files on the host and the template zbx_5_template_nodemonitorsolana.xml for the Zabbix 5.0 server. Also useful for other monitoring platforms and as a tool.
 
 ### Install
